@@ -1,0 +1,16 @@
+package lk.travel.travellion.dto.locationdto;
+
+import jakarta.validation.constraints.Size;
+import lombok.Value;
+
+import java.io.Serializable;
+
+/**
+ * DTO for {@link lk.travel.travellion.entity.Port}
+ */
+@Value
+public class PortListDTO implements Serializable {
+    Integer id;
+    @Size(max = 45)
+    String name;
+}

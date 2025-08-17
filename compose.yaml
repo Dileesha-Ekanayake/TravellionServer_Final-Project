@@ -1,0 +1,81 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker Compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+# Here the instructions define your application as a service called "server".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+version: '3.8'
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    environment:
+#      - DB_HOST=db        # Override to use 'db' service name
+      - DB_HOST=host.docker.internal        # Override to use 'db' service name
+      - DB_PORT=3306
+      - DB_NAME=travelliondb
+      - DB_USER=root
+      - DB_PASSWORD=1234
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: travelliondb
+    ports:
+      - "3307:3306"  # External access on port 3307
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge
+
+#Alternative import sql when running docker container image
+#version: '3.8'
+#services:
+#  server:
+#    build:
+#      context: .
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - DB_HOST=db
+#      - DB_PORT=3306
+#      - DB_NAME=travelliondb
+#    depends_on:
+#      - db
+#
+#  db:
+#    image: mysql:8.0
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 1234
+#      MYSQL_DATABASE: travelliondb
+#    ports:
+#      - "3307:3306"
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Import your data
+#
+#volumes:
+#  mysql_data:
