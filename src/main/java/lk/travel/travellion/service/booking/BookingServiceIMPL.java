@@ -202,7 +202,7 @@ public class BookingServiceIMPL implements BookingService {
     @Override
     public void deleteBooking(Integer id) {
         bookingRepository.findById(id)
-                .orElseThrow(() -> new ResourceAlreadyExistException("Booking with id " + id + " does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking with id " + id + " does not exist"));
         bookingRepository.deleteById(id);
     }
 
