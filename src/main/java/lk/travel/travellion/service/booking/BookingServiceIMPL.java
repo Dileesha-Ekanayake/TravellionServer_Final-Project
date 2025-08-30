@@ -197,7 +197,7 @@ public class BookingServiceIMPL implements BookingService {
      * Deletes an existing booking record by its unique identifier.
      *
      * @param id the unique identifier of the booking to be deleted
-     * @throws ResourceAlreadyExistException if a booking with the specified id does not exist
+     * @throws ResourceNotFoundException if a booking with the specified id does not exist
      */
     @Override
     public void deleteBooking(Integer id) {
